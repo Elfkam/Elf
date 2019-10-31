@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <math.h>
+#define max 1000000
+void decomposition(long long a, int array_primes[], int positions){ // function for decomposing numbers into prime numbers
+    int exponent =0;
+    if (a==1){ 
+        printf("%lld", a);
+    }
+    while (a != 1){  
+        for (int i=0; i < positions; i++){
+            while (a % array_primes[i] == 0){
+                a = a / array_primes[i];
+                exponent +=1;
+            }
+                if (exponent > 1){
+                    printf("%d^%d", array_primes[i], exponent);
+                    if (a != 1 ){  
+                        printf(" x ");
+                    }
+                }
+                if (exponent == 1){
+                    printf("%d", array_primes[i]);
+                    if (a != 1 ){
+                        printf(" x ");
+                    }
+                }
+            exponent =0;            
+        }
+    }        
+}
+int main(void){ 
+    long long z=0;
+    int array_nums[max];
+    int b;
+    for (int i=2; i < max; i++){ // part of Eratosthen sieve - array of numbers
+        array_nums[i] = i;
+    }
+    for (int i=2; i < max; i++){ // part of Eratosthen sieve - array with primes and with 0
+        if (array_nums[i] != 0){
+            b = 2*i;
+            for (int j = b; j < max; j=j+i){
+                array_nums[j] = 0;
+            }     
+        }
+    }
+    int array_primes[max];
+    int positions = 0; 
+    for(int i=2; i < max; i++){ // part of Eratosthen sieve - copy to another array but without 0
+        if (array_nums[i] != 0){
+            array_primes[positions] = array_nums[i];
+            positions++;   
+        }
+    }
+    for (int i=1; i > 0; i++){
+        if ((scanf("%lld", &z) !=1) || z < 0){
+            fprintf(stderr, "Error: Wrong input!\n");
+            return 100;
+        }
+        if (z==0) {
+            return 0;
+        }
+        printf ("Primitive number decomposition %lld is:\n", z);
+        decomposition(z, array_primes, positions);    
+        printf("\n");
+    }
+}  
