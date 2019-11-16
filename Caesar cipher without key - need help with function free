@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+void load(char* message){
+	int position = 0;
+	int letter;
+	int i=0;
+	while((letter = getchar()) != '\n' && letter != EOF){ // put letters into array message
+		message = realloc(message, position+1 * sizeof(char));
+		if (message == NULL){ // check memory
+			free(message);
+		}
+		else{
+			*(message +i) = letter; 
+			i +=1;
+		}
+		position +=1;
+		
+	}
+}
+void cipher(char* message_1, char* message_2){
+	int a=0; // value for finding key
+	int b=0; // value for finding key
+	int key=0;
+	for (int i=0; i !=26; i++){ // shift 2 arrays
+		a = 0;
+		for (int j=0; message_1[j] != '\0'; j++){ // for all letters from message_1
+			int x_1 = message_1[j] + i; 
+			if (x_1 > 'z'){ 
+					x_1 = x_1 - 26;
+			}
+			if (x_1 >= 'a' && x_1 <= 'z'){
+				if (x_1 == message_2[j]){
+					a +=1;
+				}
+			}
+			if (x_1 > 'Z'){ 
+				x_1 = x_1 - 26;
+			}
+			if (x_1 >= 'A' && x_1 <= 'Z'){			
+				if (x_1 == message_2[j]){
+					a +=1;
+				}
+			}
+		}
+		if (b < a){
+			key = i;
+			b = a;
+		}
+		
+	}
+	for (int i=0; message_1[i] != '\0'; i++){ // print deciphered message
+		int x_2 = message_1[i];
+		if (x_2 >= 'a' && x_2 <= 'z'){
+			x_2 = x_2 + key;
+			if (x_2 > 'z'){
+				x_2 = x_2 - 26;
+			}
+		}
+		if (x_2 >= 'A' && x_2 <= 'Z'){
+			x_2 = x_2 + key;
+			if (x_2 > 'Z'){
+				x_2 = x_2 - 26;
+			}
+		}
+	printf("%c", x_2);
+	}
+	printf("\n");
+}
+int main(){
+	int error_1=2; //value for wrong input
+	int error_2=0; //value for wrong input
+	char* message_1;
+	message_1 = ((char*)malloc(2 * sizeof(char)));
+	char* message_2;
+	message_2 = ((char*)malloc(2 * sizeof(char)));
+	load(message_1);
+	for (int i=0; message_1[i] != '\0'; i++){ // only for wrong inputs
+		if (isalpha(message_1[i]) == 0){
+			error_1 = 1;
+		}
+	}
+	load(message_2);
+	for (int i=0; message_2[i] != '\0'; i++){ // only for wrong inputs
+		if (isalpha(message_2[i]) == 0){
+			error_1 =1;
+		}
+	}
+	int try_1 = 0; //value for wrong input
+	int try_2 = 0; //value for wrong input
+	for (int i=0; message_1[i] != '\0'; i++){ // only for wrong inputs
+		try_1 +=1;
+	}
+	for (int i=0; message_2[i] != '\0'; i++){ // only for wrong inputs
+		try_2 +=1;
+	}
+	if (try_1 != try_2){ // only for wrong inputs
+		error_2 = 1;
+	}
+	if (error_1 == error_2){ // only for wrong inputs
+		fprintf(stderr, "Error: Wrong input!\n");
+		return 100;
+	}
+	if (error_1 == 1){ // only for wrong inputs
+		fprintf(stderr, "Error: Wrong input!\n");
+		return 100;
+	}
+	if (error_2 == 1){ // only for wrong inputs
+		fprintf(stderr, "Error: Wrong lenght!\n");
+		return 101;
+	}
+	cipher(message_1, message_2);
+	free(message_1);
+	free(message_2);	
+}
